@@ -9,20 +9,17 @@ public class Player {
     private int numFood;
     private int numPlayer;
     
-    Player(LinkedList<Pet> petDeck, int numPlayer) {
+    Player(int numPlayer) {
         this.numTurn = 1;
         this.goldCurrency = 10;
         this.numFood = 0;
-        this.petDeck = petDeck;
+        this.petDeck = new LinkedList<Pet>();
+        petDeck.add(new Ant());
+        petDeck.add(new Beaver());
+        petDeck.add(new Cricket());
+        petDeck.add(new Duck());
+        petDeck.add(new Horse());
         this.numPlayer = numPlayer;
-        this.petShop = new LinkedList<Pet>();
-        //Haven't implemented the individual pet classes just yet
-        //thinking about setting this as the default shop and leaving the variation to occur later in the game
-        petShop.add(new Ant());
-        petShop.add(new Beaver());
-        petShop.add(new Cricket());
-        petShop.add(new Duck());
-        petShop.add(new Horse());
     }
     //Will be contained within each game method (computer or human)
     public void playerTurn(Scanner input) {
@@ -33,5 +30,12 @@ public class Player {
         this.goldCurrency = 10;
         this.petShop = new LinkedList<Pet>();
         numTurn++;
+    }
+    
+    public void displayPets() {
+        System.out.printf("Player %d's pet deck:%n",numPlayer);
+        for(int i = 0; i < petDeck.size(); i++) {
+            System.out.println(petDeck.get(i).toString());
+        }
     }
 }
