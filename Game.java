@@ -13,10 +13,12 @@ public class Game {
                 userResponse = input.nextLine();
                 if(userResponse.equalsIgnoreCase("c")) {
                     //run one player game method (PVC)
+                    PVC(input);
                     break;
                 }
                 else if(userResponse.equalsIgnoreCase("t")) {
                     //run two player game method (PVP)
+                    PVP(input);
                     break;
                 }
             }
@@ -24,5 +26,15 @@ public class Game {
                 System.out.println("Invalid input, computer will only accept 'c' or 't'");
             }
         }
+    }
+    public static void PVP(Scanner input) {
+        Player p1 = new Player(1);
+        Player p2 = new Player(2);
+        p1.playerTurn(input);
+        p1.displayPets();
+    }
+    public static void PVC(Scanner input) {
+        Player p1 = new Player(1);
+        Player p2 = new Player(2);
     }
 }
