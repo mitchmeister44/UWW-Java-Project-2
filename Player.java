@@ -8,17 +8,27 @@ public class Player {
     private int goldCurrency;
     private int numFood;
     private int numPlayer;
-    
+
     Player(int numPlayer) {
+        Random rand = new Random();
+        int r1 = rand.nextInt(5);
+        int r2 = rand.nextInt(5);
+        while(r2 == r1) {
+            r2 = rand.nextInt(5);
+        }
+        int r3 = rand.nextInt(5);
+        while(r3 == r2 || r3 == r1) {
+            r3 = rand.nextInt(5);
+        }
+        Pet[] basePetArr = new Pet[]{new Ant(), new Beaver(), new Cricket(), new Duck(), new Horse()};
+
         this.numTurn = 1;
         this.goldCurrency = 10;
         this.numFood = 0;
         this.petDeck = new LinkedList<Pet>();
-        petDeck.add(new Ant());
-        petDeck.add(new Beaver());
-        petDeck.add(new Cricket());
-        petDeck.add(new Duck());
-        petDeck.add(new Horse());
+        petDeck.add(basePetArr[r1]);
+        petDeck.add(basePetArr[r2]);
+        petDeck.add(basePetArr[r3]);
         this.numPlayer = numPlayer;
     }
     //Will be contained within each game method (computer or human)
@@ -31,7 +41,7 @@ public class Player {
         this.petShop = new LinkedList<Pet>();
         numTurn++;
     }
-    
+
     public void displayPets() {
         System.out.printf("Player %d's pet deck:%n",numPlayer);
         for(int i = 0; i < petDeck.size(); i++) {
