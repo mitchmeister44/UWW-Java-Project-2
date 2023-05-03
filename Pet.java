@@ -8,6 +8,14 @@ public abstract class Pet {
     public double attackMultiplier;
     public int level;
     public int luck;
+    
+    boolean[] foodData= new boolean[] {false, false, false, false, false,false};
+    public boolean hasCoco= foodData[0];
+    public boolean hasCherry= foodData[1];
+    public boolean hasGarlic= foodData[2];
+    public boolean hasApple= foodData[3];
+    public boolean hasMeat= foodData[4];
+    public boolean hasChili= foodData[5];
 
     public String getName() {
         return this.getClass().getSimpleName();
@@ -16,12 +24,15 @@ public abstract class Pet {
     public double getAttackMultiplier() {
         return this.attackMultiplier;
     }
+
     public double getAttack() {
         return this.attack;
     }
+
     public double getHealth() {
         return this.health;
     }
+
     public int getLuck() {
         return this.luck;
     }
@@ -47,8 +58,9 @@ public abstract class Pet {
     //Land adds 1 health point to itself and another pet
     //Air substracts 1 health point from the pet casting its special while doubling the attack of another pet
     public abstract void useSpecial(Pet p2);
-    
+
     //public abstract void attack();
+    
 
     @Override
     public String toString() {
