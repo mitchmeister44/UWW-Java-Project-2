@@ -44,6 +44,9 @@ public class Game {
         System.out.println("All players will start with the 5 default pets, 2 additional pets will be available for purchase from the shop as the game progresses.");
         p1.playerTurn(input);
         p1.displayPets();
+        p2.playerTurn(input);
+        p2.displayPets();
+        p1.attack(p1.petDeck.get(0),p2.petDeck.get(0));
     }
 
     public static void rounds2P(Scanner input, Player p1, Player p2){
@@ -64,7 +67,7 @@ public class Game {
                                 p1.buyPets();
                                 break;
                             }else if(optionChose.equalsIgnoreCase("s")){
-                                pet.foodUpdate(p1.shop(input));
+                                p1.shop(input);
                                 break;
                             }
                         } catch (InputMismatchException e){
@@ -74,13 +77,13 @@ public class Game {
                         try{
                             optionChose= input.nextLine();
                             if(optionChose.equalsIgnoreCase("u")){
-                                p2.upgradePets();
+                                p2.upgradePets(input);
                                 break;
                             } else if(optionChose.equalsIgnoreCase("b")){
                                 p2.buyPets();
                                 break;
                             }else if(optionChose.equalsIgnoreCase("s")){
-                                p2.shop();
+                                p2.shop(input);
                                 break;
                             }
                         } catch (InputMismatchException e){
@@ -104,13 +107,13 @@ public class Game {
                         try{
                             optionChose= input.nextLine();
                             if(optionChose.equalsIgnoreCase("u")){
-                                p1.upgradePets();
+                                p1.upgradePets(input);
                                 break;
                             } else if(optionChose.equalsIgnoreCase("b")){
                                 p1.buyPets();
                                 break;
                             }else if(optionChose.equalsIgnoreCase("s")){
-                                p1.shop();
+                                p1.shop(input);
                                 break;
                             }
                         } catch (InputMismatchException e){
@@ -120,13 +123,13 @@ public class Game {
                         try{
                             optionChose= input.nextLine();
                             if(optionChose.equalsIgnoreCase("u")){
-                                p2.upgradePets();
+                                p2.upgradePets(input);
                                 break;
                             } else if(optionChose.equalsIgnoreCase("b")){
                                 p2.buyPets();
                                 break;
                             }else if(optionChose.equalsIgnoreCase("s")){
-                                p2.shop();
+                                p2.shop(input);
                                 break;
                             }
                         } catch (InputMismatchException e){
@@ -136,13 +139,13 @@ public class Game {
                         try{
                             optionChose= input.nextLine();
                             if(optionChose.equalsIgnoreCase("u")){
-                                p3.upgradePets();
+                                p3.upgradePets(input);
                                 break;
                             } else if(optionChose.equalsIgnoreCase("b")){
                                 p3.buyPets();
                                 break;
                             }else if(optionChose.equalsIgnoreCase("s")){
-                                p3.shop();
+                                p3.shop(input);
                                 break;
                             }
                         } catch (InputMismatchException e){
@@ -152,13 +155,13 @@ public class Game {
                         try{
                             optionChose= input.nextLine();
                             if(optionChose.equalsIgnoreCase("u")){
-                                p4.upgradePets();
+                                p4.upgradePets(input);
                                 break;
                             } else if(optionChose.equalsIgnoreCase("b")){
                                 p4.buyPets();
                                 break;
                             }else if(optionChose.equalsIgnoreCase("s")){
-                                p4.shop();
+                                p4.shop(input);
                                 break;
                             }
                         } catch (InputMismatchException e){
