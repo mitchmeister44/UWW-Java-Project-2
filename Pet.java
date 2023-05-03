@@ -8,13 +8,19 @@ public abstract class Pet {
     public double attackMultiplier;
     public int level;
     public int luck;
-    
+
     boolean[] foodData= new boolean[] {false, false, false, false, false,false};
+    //Sets the enemy pets attack to 0 for one turn
     public boolean hasCoco= foodData[0];
+    //Decreases the enemy pets luck
     public boolean hasCherry= foodData[1];
+    //Decreases enemy attack by 1
     public boolean hasGarlic= foodData[2];
+    //Increases friendly health by 2
     public boolean hasApple= foodData[3];
+    //Increases friendly attack by 1
     public boolean hasMeat= foodData[4];
+    //Decreases enemy health by 2
     public boolean hasChili= foodData[5];
 
     public String getName() {
@@ -59,8 +65,7 @@ public abstract class Pet {
     //Air substracts 1 health point from the pet casting its special while doubling the attack of another pet
     public abstract void useSpecial(Pet p2);
 
-    //public abstract void attack();
-    
+    public abstract void reset();
 
     @Override
     public String toString() {
