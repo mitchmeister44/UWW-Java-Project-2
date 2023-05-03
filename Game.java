@@ -35,6 +35,7 @@ public class Game {
         System.out.println("All players will start with the 5 default pets, 2 additional pets will be available for purchase from the shop as the game progresses.");
         p1.playerTurn(input);
         p1.displayPets();
+
     }
 
     public static void PV2(Scanner input) {
@@ -44,4 +45,129 @@ public class Game {
         p1.playerTurn(input);
         p1.displayPets();
     }
+
+    public static void rounds2P(Scanner input, Player p1, Player p2){
+        int round =0;
+        String optionChose;
+        for (int i=0;i<5;i++){
+            round++;
+            for (int j=0;j<2;j++){
+                System.out.printf("Round %d start: Player %d choose your action",round, j);
+                while(true){
+                    if(j==0){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p1.upgradePets(input);
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p1.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                pet.foodUpdate(p1.shop(input));
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, value accepted are 'u', 'b', or 's'");
+                        }
+                    } else  if(j==1){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p2.upgradePets();
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p2.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p2.shop();
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, value accepted are 'u', 'b', or 's'");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void rounds4P(Scanner input, Player p1, Player p2, Player p3, Player p4){
+        int round =0;
+        String optionChose;
+        for (int i=0;i<5;i++){
+            round++;
+            for (int j=0;j<4;j++){
+                System.out.printf("Round %d start: Player %d choose your action%n",round, j);
+                while(true){
+                    if(j==0){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p1.upgradePets();
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p1.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p1.shop();
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, value accepted are 'u', 'b', or 's'");
+                        }
+                    } else  if(j==1){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p2.upgradePets();
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p2.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p2.shop();
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, value accepted are 'u', 'b', or 's'");
+                        }
+                    } else  if(j==2){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p3.upgradePets();
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p3.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p3.shop();
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, value accepted are 'u', 'b', or 's'");
+                        }
+                    } else  if(j==3){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p4.upgradePets();
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p4.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p4.shop();
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, value accepted are 'u', 'b', or 's'");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
