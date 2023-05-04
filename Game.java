@@ -1,222 +1,379 @@
 import java.util.*;
-public class Player {
-    //Pet deck (player's lineup) and pet shop will behave as separate linked lists
-    //Other variables are self-explanatory
-    public LinkedList<Pet> petDeck;
-    private LinkedList<Pet> petShop;
-    private int numTurn;
-    private int goldCurrency;
-    private int numFood;
-    private int numPlayer;
-    Scanner input= new Scanner(System.in);
-
-    Player(int numPlayer) {
-        Random rand = new Random();
-        int r1 = rand.nextInt(5);
-        int r2 = rand.nextInt(5);
-        while(r2 == r1) {
-            r2 = rand.nextInt(5);
+import java.lang.*;
+import java.io.*;
+import java.text.*;
+import java.time.*;
+import java.util.concurrent.*;
+public class Game {
+    public static void main (String[] args) {
+        try(Scanner reader = new Scanner(new File("statistics.txt"))){
+            String line = reader.nextLine();
+            System.out.printf("Last Login: %s%n",line);
         }
-        int r3 = rand.nextInt(5);
-        while(r3 == r2 || r3 == r1) {
-            r3 = rand.nextInt(5);
+
+        catch(FileNotFoundException e) {
+            System.out.println("Statistics file empty, this is your first login.");
         }
-        Pet[] basePetArr = new Pet[]{new Ant(), new Beaver(), new Cricket(), new Duck(), new Horse()};
-
-        this.numTurn = 1;
-        this.goldCurrency = 10;
-        this.numFood = 0;
-        this.petDeck = new LinkedList<Pet>();
-        petDeck.add(basePetArr[r1]);
-        petDeck.add(basePetArr[r2]);
-        petDeck.add(basePetArr[r3]);
-        this.numPlayer = numPlayer;
-    }
-    //Will be contained within each game method (computer or human)
-    public void playerTurn(Scanner input) {
-        System.out.printf("Player %d's turn %d will now commence!%n", numPlayer, numTurn);
-    }
-    //Game progression method (gold addition, shop reset, etc.)
-    public void progress() {
-        this.goldCurrency = 10;
-        this.petShop = new LinkedList<Pet>();
-        numTurn++;
-    }
-
-    public void displayPets() {
-        System.out.printf("Player %d's pet deck:%n",numPlayer);
-        for(int i = 0; i < petDeck.size(); i++) {
-            System.out.println(petDeck.get(i).toString());
+        catch(NoSuchElementException e) {
+            System.out.println("Statistics file empty, this is your first login.");
         }
-    }
-
-    public void upgradePets(Scanner input){
-        displayPets();
-        int userChoice;
-        //initiate temp pet
-        System.out.println("Which pet would you like to upgrade a tier");
-        while(true){
+        Scanner input = new Scanner(System.in);
+        String userResponse;
+        System.out.println("Welcome to our interpretation of the popular autobattler Super Auto Pets! We hope you enjoy!");
+        while(true) {
+            System.out.println("Please start by selecting the way in which you'll play. Enter 't' to play live with two players or 'f' to play with 4");
             try {
-                userChoice=input.nextInt();
-                if (userChoice>=0 && userChoice<=petDeck.size()){
-                    //temp pet goes here= petDeck.get(userChoice);
-                    //set new pet which is identical just upgraded to petDeck(UserChoice)
+                userResponse = input.nextLine();
+                if(userResponse.equalsIgnoreCase("f")) {
+                    //run four player game method (PV4)
+                    PV4(input);
                     break;
                 }
-            } catch (InputMismatchException e){
-                System.out.println("you must input a number that corrisponds to one of your pets");
-            }
-
-        }
-    }
-
-    public void attack(Pet p1, Pet p2) {
-        Random rand = new Random();
-        p1.setAttackMultiplier(p2);
-        p2.setAttackMultiplier(p1);
-        if(p1.hasCoco) {
-            p2.attack = 0.0;
-            p1.hasCoco = false;
-            System.out.printf("%s casts the coconut food, setting its opponents attack to 0 for this turn!",p1.getClass().getSimpleName());
-        }
-        else if(p1.hasCherry) {
-            p2.luck--;
-            p1.hasCherry = false;
-            System.out.printf("%s casts the cherry food, decreasing its opponents luck by one point!%n",p1.getClass().getSimpleName());
-        }
-        else if(p1.hasGarlic) {
-            p2.attack--;
-            p1.hasGarlic = false;
-            System.out.printf("%s casts the garlic food, decreasing its opponents attack by 1!%n",p1.getClass().getSimpleName());
-        }
-        else if(p1.hasApple) {
-            p1.health+=2;
-            p1.hasApple = false;
-            System.out.printf("%s casts the apple food, increasing its health by 2!%n",p1.getClass().getSimpleName());
-        }
-        else if(p1.hasMeat) {
-            p1.attack++;
-            p1.hasMeat = false;
-            System.out.printf("%s casts the meat food, increasing its attack by 1!%n",p1.getClass().getSimpleName());
-        }
-        else if(p1.hasChili) {
-            p2.health-=2;
-            p1.hasChili = false;
-            System.out.printf("%s casts the chili food, decreasing its opponents health by 2!%n",p1.getClass().getSimpleName());
-        }
-        if(p2.hasCoco) {
-            p1.attack = 0.0;
-            p2.hasCoco = false;
-            System.out.printf("%s casts the coconut food, setting its opponents attack to 0 for this turn!",p2.getClass().getSimpleName());
-        }
-        else if(p2.hasCherry) {
-            p1.luck--;
-            p2.hasCherry = false;
-            System.out.printf("%s casts the cherry food, decreasing its opponents luck by one point!%n",p2.getClass().getSimpleName());
-        }
-        else if(p2.hasGarlic) {
-            p1.attack--;
-            p2.hasGarlic = false;
-            System.out.printf("%s casts the garlic food, decreasing its opponents attack by 1!%n",p2.getClass().getSimpleName());
-        }
-        else if(p2.hasApple) {
-            p2.health+=2;
-            p2.hasMeat = false;
-            System.out.printf("%s casts the apple food, increasing its health by 2!%n",p2.getClass().getSimpleName());
-        }
-        else if(p2.hasMeat) {
-            p2.attack++;
-            p2.hasMeat = false;
-            System.out.printf("%s casts the meat food, increasing its attack by 1!%n",p2.getClass().getSimpleName());
-        }
-        else if(p2.hasChili) {
-            p2.health-=2;
-            p2.hasChili = false;
-            System.out.printf("%s casts the chili food, decreasing its opponents health by 2!%n",p2.getClass().getSimpleName());
-        }
-        if(p1.luck > p2.luck) {
-            System.out.printf("The %s has a higher luck attribute than that of the %s. %s will attack first!%n",p1.getClass().getSimpleName(),p2.getClass().getSimpleName(),p1.getClass().getSimpleName());
-            p2.health = p2.health-(p1.attack*p1.attackMultiplier);
-            System.out.printf("%s attacked %s, dealing %.1f damage!%n",p1.getClass().getSimpleName(),p2.getClass().getSimpleName(),p1.attack);
-            System.out.printf("%s is now attacking!%n",p2.getClass().getSimpleName());
-            p1.health = p1.health-(p2.attack*p2.attackMultiplier);
-            System.out.printf("%s attacked %s, dealing %.1f damage!%n",p2.getClass().getSimpleName(),p1.getClass().getSimpleName(),p2.attack);
-        }
-        else if(p2.luck > p1.luck) {
-            System.out.printf("The %s has a higher luck attribute than that of the %s. %s will attack first!%n",p2.getClass().getSimpleName(),p1.getClass().getSimpleName(),p2.getClass().getSimpleName());
-            p1.health = p1.health-(p2.attack*p2.attackMultiplier);
-            System.out.printf("%s attacked %s, dealing %.1f damage!%n",p2.getClass().getSimpleName(),p1.getClass().getSimpleName(),p2.attack);
-            System.out.printf("%s is now attacking!%n",p1.getClass().getSimpleName());
-            p2.health = p2.health-(p1.attack*p1.attackMultiplier);
-            System.out.printf("%s attacked %s, dealing %.1f damage!%n",p1.getClass().getSimpleName(),p2.getClass().getSimpleName(),p1.attack);
-        }
-        else {
-            System.out.println("The two battling pets have equivalent luck attributes, a coin will be flipped to decide who attacks first!");
-            if(rand.nextInt(1) == 0) {
-                System.out.printf("Luck is on the %s's side, it will attack first!%n",p1.getClass().getSimpleName());
-                System.out.printf("The %s has a higher luck attribute than that of the %s. %s will attack first!%n",p1.getClass().getSimpleName(),p2.getClass().getSimpleName(),p1.getClass().getSimpleName());
-                p2.health = p2.health-(p1.attack*p1.attackMultiplier);
-                System.out.printf("%s attacked %s, dealing %.1f damage!%n",p1.getClass().getSimpleName(),p2.getClass().getSimpleName(),p1.attack);
-                System.out.printf("%s is now attacking!%n",p2.getClass().getSimpleName());
-                p1.health = p1.health-(p2.attack*p2.attackMultiplier);
-                System.out.printf("%s attacked %s, dealing %.1f damage!%n",p2.getClass().getSimpleName(),p1.getClass().getSimpleName(),p2.attack);
-            }
-            else if(rand.nextInt(1) == 1) {
-                System.out.printf("Luck is on the %s's side, it will attack first!%n",p2.getClass().getSimpleName());
-                System.out.printf("The %s has a higher luck attribute than that of the %s. %s will attack first!%n",p2.getClass().getSimpleName(),p1.getClass().getSimpleName(),p2.getClass().getSimpleName());
-                p1.health = p1.health-(p2.attack*p2.attackMultiplier);
-                System.out.printf("%s attacked %s, dealing %.1f damage!%n",p2.getClass().getSimpleName(),p1.getClass().getSimpleName(),p2.attack);
-                System.out.printf("%s is now attacking!%n",p1.getClass().getSimpleName());
-                p2.health = p2.health-(p1.attack*p1.attackMultiplier);
-                System.out.printf("%s attacked %s, dealing %.1f damage!%n",p1.getClass().getSimpleName(),p2.getClass().getSimpleName(),p1.attack);
-            }
-        }
-
-        //Debuffing statements, alleviating one use food castings
-        if(p1.attack == 0.0) {
-            p1.reset();
-        }
-        if(p2.attack == 0.0) {
-            p2.reset();
-        }
-    }
-
-    public void buyPets(){
-    }
-
-    public void shop(Scanner input){
-        Random rand = new Random();
-        int returnValue;
-        String[] foodItems= new String[5];
-        foodItems[0]= "Coconut: a temporary shield that fully blocks 1 attack";
-        foodItems[1]= "Cherry: a perk that grants increased luck";
-        foodItems[2]= "Garlic: a shield that blocks 1 damage each attack";
-        foodItems[3]= "Apple: a buff that grants your pet plus 2 health for each fight";
-        foodItems[4]= "Meat: a buff that grants your pet plus 2 attack for each fight";
-        foodItems[5]= "Chili: a buff that on attack also deals 1 damage to the next pet";
-        int item1 = rand.nextInt(5);
-        int item2= rand.nextInt(5);
-        System.out.printf("Please chose the item you would like:%n %s %n%s",foodItems[item1], foodItems[item2]);
-
-        while(true){
-
-            try {
-                int foodChoice= input.nextInt(); 
-                if (foodChoice==1){
-                    returnValue= item1;
-                    break;
-                } else if (foodChoice==2){
-                    returnValue = item2;
+                else if(userResponse.equalsIgnoreCase("t")) {
+                    //run two player game method (PV2)
+                    PV2(input);
                     break;
                 }
-            } catch (InputMismatchException e){
-                System.out.println("you must input either a 1 or a 2");
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input, computer will only accept 'c' or 't'");
             }
         }
-        System.out.println("Which pet would you like to apply the food to?");
-        displayPets();
-        //temp pet goes here= petDeck.get(userChoice);
-        //set new pet which is identical just with food boolean to true
-
     }
+
+    public static void PV4(Scanner input) {
+        File file = new File("statistics.txt");
+        BufferedWriter writer = null;
+        TimeUnit time = TimeUnit.SECONDS;
+        int p1Wins = 0;
+        int p2Wins = 0;
+        int p3Wins = 0;
+        int p4Wins = 0;
+        String p1Name,p2Name,p3Name,p4Name;
+        String formattedGameOutcome1 = " ";
+        String formattedGameOutcome2 = " ";
+        Player p1 = new Player(1);
+        Player p2 = new Player(2);
+        Player p3 = new Player(3);
+        Player p4 = new Player(4);
+        System.out.println("All players will start with the 5 default pets, 2 additional pets will be available for purchase from the shop as the game progresses.");
+        p1.displayPets();
+        p2.displayPets();
+        p3.displayPets();
+        p4.displayPets();
+        rounds4P(input, p1, p2, p3, p4);
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
+        Date date = new Date();
+        try{
+            writer = new BufferedWriter(new FileWriter(file));
+            writer.write(formatter.format(date));
+            writer.write("\n");
+            writer.write("Final pet decks:\n");
+            writer.write("Player 1:\n");
+            writer.write(p1.petDeck.toString());
+            writer.write("\n");
+            writer.write("Player 2:\n");
+            writer.write(p2.petDeck.toString());
+            writer.write("Player 3:\n");
+            writer.write(p3.petDeck.toString());
+            writer.write("Player 4:\n");
+            writer.write(p4.petDeck.toString());
+            writer.write("\n");
+        }
+        catch (IOException e) {
+            System.out.println("Could not write to file");
+        }
+        System.out.println("Final pet decks before battle: ");
+        p1.displayPets();
+        p2.displayPets();
+        p3.displayPets();
+        p4.displayPets();
+        try{
+            time.sleep(10);
+        }
+        catch(InterruptedException e) {
+
+        }
+        System.out.println("Players 1 and 2 will now face off!");
+        for(int i = 0; i < p1.petDeck.size(); i++) {
+            if(p1.attack(p1Wins, p2Wins,p1.petDeck.get(i),p2.petDeck.get(i)) == 2) {
+                p2Wins++;
+            }
+            else {
+                p1Wins++;
+            }
+        }
+        System.out.println("Players 3 and 4 will now face off!");
+        System.out.println("To clarify as a means of avoiding confusion, player 3 will be shown as '1' and 4 as '2'");
+        for(int i = 0; i < p3.petDeck.size(); i++) {
+            if(p3.attack(p3Wins, p4Wins,p3.petDeck.get(i),p4.petDeck.get(i)) == 2) {
+                p4Wins++;
+            }
+            else {
+                p3Wins++;
+            }
+        }
+        if(p1Wins > p2Wins) {
+            System.out.printf("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
+            formattedGameOutcome1 = String.format("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
+        }
+        else if(p2Wins > p1Wins) {
+            System.out.printf("Player 2 wins %d to %d over player 1!%n",p2Wins,p1Wins);
+            formattedGameOutcome1 = String.format("Player 2 wins %d to %d over player 2!%n",p2Wins,p1Wins);
+        }
+        if(p3Wins > p4Wins) {
+            System.out.printf("Player 3 wins %d to %d over player 4!%n",p3Wins,p4Wins);
+            formattedGameOutcome2 = String.format("Player 3 wins %d to %d over player 4!%n",p3Wins,p4Wins);
+        }
+        else if(p2Wins > p1Wins) {
+            System.out.printf("Player 4 wins %d to %d over player 3!%n",p4Wins,p3Wins);
+            formattedGameOutcome2 = String.format("Player 4 wins %d to %d over player 3!%n",p4Wins,p3Wins);
+        }
+        System.out.println("All players, please enter your names.");
+        System.out.println("Player 1:");
+        p1Name = input.nextLine();
+        System.out.println("Player 2:");
+        p2Name = input.nextLine();
+        System.out.println("Player 3:");
+        p3Name = input.nextLine();
+        System.out.println("Player 4:");
+        p4Name = input.nextLine();
+        String formattedPlayerNames = String.format("Player 1: %s%nPlayer 2: %s%nPlayer 3: %s%nPlayer 4: %s%n",p1Name,p2Name,p3Name,p4Name);
+        System.out.println("Summary statistics for the most recent playthrough will be available via the program's text file. Thank you for playing!");
+        try{
+            writer.write("\n");
+            writer.write("Game Type: 4 player\n");
+            writer.write(formattedPlayerNames);
+            writer.write("Game Outcomes:\n");
+            writer.write("Game 1: ");
+            writer.write(formattedGameOutcome1);
+            writer.write("\n");
+            writer.write("Game 2: ");
+            writer.write(formattedGameOutcome2);
+        }
+        catch (IOException e) {
+            System.out.println("Could not write to file");
+        }
+        finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                System.out.println("I/O error occurred");
+            }
+        }
+    }
+
+    public static void PV2(Scanner input) {
+        File file = new File("statistics.txt");
+        BufferedWriter writer = null;
+        TimeUnit time = TimeUnit.SECONDS;
+        int p1Wins = 0;
+        int p2Wins = 0;
+        Player p1 = new Player(1);
+        Player p2 = new Player(2);
+        String p1Name,p2Name;;
+        String formattedGameOutcome = " ";
+        System.out.println("All players will start with the 5 default pets, 2 additional pets will be available for purchase from the shop as the game progresses.");
+        p1.displayPets();
+        p2.displayPets();
+        rounds2P(input, p1, p2);
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
+        Date date = new Date();
+        try{
+            writer = new BufferedWriter(new FileWriter(file));
+            writer.write(formatter.format(date));
+            writer.write("\n");
+            writer.write("Final pet decks:\n");
+            writer.write("Player 1:\n");
+            writer.write(p1.petDeck.toString());
+            writer.write("\n");
+            writer.write("Player 2:\n");
+            writer.write(p2.petDeck.toString());
+            writer.write("\n");
+        }
+        catch (IOException e) {
+            System.out.println("Could not write to file");
+        }
+        System.out.println("Final pet decks before battle: ");
+        p1.displayPets();
+        p2.displayPets();
+        try{
+            time.sleep(10);
+        }
+        catch(InterruptedException e) {
+
+        }
+        for(int i = 0; i < p1.petDeck.size(); i++) {
+            if(p1.attack(p1Wins, p2Wins,p1.petDeck.get(i),p2.petDeck.get(i)) == 2) {
+                p2Wins++;
+            }
+            else {
+                p1Wins++;
+            }
+        }
+
+        if(p1Wins > p2Wins) {
+            System.out.printf("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
+            formattedGameOutcome = String.format("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
+        }
+        else if(p2Wins > p1Wins) {
+            System.out.printf("Player 2 wins %d to %d over player 1!%n",p2Wins,p1Wins);
+            formattedGameOutcome = String.format("Player 2 wins %d to %d over player 1!%n",p1Wins,p2Wins);
+        }
+        System.out.println("Summary statistics for the most recent playthrough will be available via the program's text file. Thank you for playing!");
+        System.out.println("All players, please enter your names.");
+        System.out.println("Player 1:");
+        p1Name = input.nextLine();
+        System.out.println("Player 2:");
+        p2Name = input.nextLine();
+        String formattedPlayerNames = String.format("Player 1: %s%nPlayer 2: %s%n",p1Name,p2Name);
+        try{
+            writer.write("\n");
+            writer.write("Game Type: 2 player\n");
+            writer.write(formattedPlayerNames);
+            writer.write("Game Outcomes:\n");
+            writer.write("Game 1: ");
+            writer.write(formattedGameOutcome);
+            writer.write("\n");
+        }
+        catch (IOException e) {
+            System.out.println("Could not write to file");
+        }
+        finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                System.out.println("I/O error occurred");
+            }
+        }
+    }
+
+    public static void rounds2P(Scanner input, Player p1, Player p2){
+        int round =0;
+        String optionChose;
+        for (int i=0;i<5;i++){
+            round++;
+            for (int j=0;j<2;j++){
+                System.out.printf("Round %d start: Player %d choose your action ('u' to upgrade, 'b' to buy, 's' to access the shop%n",round, j+1);
+                while(true){
+                    if(j==0){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p1.upgradePets(input);
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p1.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p1.shop(input);
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                        }
+                    } else if(j==1){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p2.upgradePets(input);
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p2.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p2.shop(input);
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void rounds4P(Scanner input, Player p1, Player p2, Player p3, Player p4){
+        int round =0;
+        String optionChose;
+        for (int i=0;i<5;i++){
+            round++;
+            for (int j=0;j<4;j++){
+                System.out.printf("Round %d start: Player %d choose your action ('u' to upgrade, 'b' to buy, 's' to access the shop%n",round, j+1);
+                while(true){
+                    if(j==0){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p1.upgradePets(input);
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p1.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p1.shop(input);
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                        }
+                    } else  if(j==1){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p2.upgradePets(input);
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p2.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p2.shop(input);
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                        }
+                    } else  if(j==2){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p3.upgradePets(input);
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p3.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p3.shop(input);
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                        }
+                    } else  if(j==3){
+                        try{
+                            optionChose= input.nextLine();
+                            if(optionChose.equalsIgnoreCase("u")){
+                                p4.upgradePets(input);
+                                break;
+                            } else if(optionChose.equalsIgnoreCase("b")){
+                                p4.buyPets();
+                                break;
+                            }else if(optionChose.equalsIgnoreCase("s")){
+                                p4.shop(input);
+                                break;
+                            }
+                        } catch (InputMismatchException e){
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
