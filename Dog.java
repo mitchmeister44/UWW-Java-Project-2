@@ -21,7 +21,7 @@ public class Dog extends Pet {
             level++;
         }
         else {
-            System.out.println("Pet cannot be upgraded, maximum level achieved.");
+            System.out.println("Pet cannot be upgraded, maximum level achieved. You will now lose this turn.");
         }
     }
 
@@ -29,5 +29,10 @@ public class Dog extends Pet {
     public void useSpecial(Pet p2) {
         this.health++;
         p2.health++;
+    }
+    
+    @Override
+    public void reset() {
+        this.attack = 4.0;
     }
 }
