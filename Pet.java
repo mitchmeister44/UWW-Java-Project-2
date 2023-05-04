@@ -1,4 +1,4 @@
-public abstract class Pet {
+public abstract class Pet implements Comparable<Pet> {
     public double health;
     public double attack;
     public double shield;
@@ -45,16 +45,16 @@ public abstract class Pet {
 
     public void setAttackMultiplier(Pet p2) {
         if((this.habitat == "water" && p2.habitat == "land") || (this.habitat == "land" && p2.habitat == "air") || (this.habitat == "air" && p2.habitat == "garden") || (this.habitat == "garden" && p2.habitat == "water")) {
-            attackMultiplier = 0.5;
-            p2.attackMultiplier = 2.0;
+            attackMultiplier/=2;
+            p2.attackMultiplier*=2;
         }
         else if ((this.habitat == "land" && p2.habitat == "water") || (this.habitat == "air" && p2.habitat == "land") || (this.habitat == "garden" && p2.habitat == "air") || (this.habitat == "water" && p2.habitat == "garden")) {
-            attackMultiplier = 2.0;
-            p2.attackMultiplier = 0.5;
+            attackMultiplier*=2;
+            p2.attackMultiplier/=2;
         }
         else if (this.habitat == p2.habitat) {
-            attackMultiplier = 1.0;
-            p2.attackMultiplier = 1.0;
+            attackMultiplier = attackMultiplier;
+            p2.attackMultiplier = p2.attackMultiplier;
         }
     }
 
@@ -66,7 +66,20 @@ public abstract class Pet {
     public abstract void useSpecial(Pet p2);
 
     public abstract void reset();
-
+    
+    @Override
+    public int compareTo(Pet p) {
+        if(attack > p.attack) {
+            return -1;
+        }
+        else if (attack == p.attack) {
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
+    
     @Override
     public String toString() {
         return String.format("%s:%n %-10s %-10s%n %-10s %-10s%n %-10s %-10s%n %-10s %-10s%n %-10s %-10s%n",getName(), "Tier:", level, "Attack:", attack, "Luck:", luck, "Health:", health, "Habitat:", habitat);
