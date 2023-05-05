@@ -1,3 +1,4 @@
+//Mitchell's segment of work
 public abstract class Pet implements Comparable<Pet> {
     public double health;
     public double attack;
