@@ -6,6 +6,8 @@ import java.time.*;
 import java.util.concurrent.*;
 public class Game {
     public static void main (String[] args) {
+        //File input fulfilled requirement
+        //Registers first login in the event of an empty file, most recent game (date & time) displayed otherwise
         try(Scanner reader = new Scanner(new File("statistics.txt"))){
             String line = reader.nextLine();
             System.out.printf("Last Login: %s%n",line);
@@ -26,11 +28,15 @@ public class Game {
                 userResponse = input.nextLine();
                 if(userResponse.equalsIgnoreCase("f")) {
                     //run four player game method (PV4)
+                    System.out.println("In the moments that ensue, each of the 4 players will receive 5 actions over 5 rounds.");
+                    System.out.println("The game will progress sequentially from player to player.");
                     PV4(input);
                     break;
                 }
                 else if(userResponse.equalsIgnoreCase("t")) {
                     //run two player game method (PV2)
+                    System.out.println("In the moments that ensue, each of the 2 players will receive 5 actions over 5 rounds.");
+                    System.out.println("The game will progress sequentially from player to player.");
                     PV2(input);
                     break;
                 }
@@ -42,9 +48,12 @@ public class Game {
     }
 
     public static void PV4(Scanner input) {
+        //File creation for game statistics logging later on
         File file = new File("statistics.txt");
         BufferedWriter writer = null;
+        //Time unit creation for time display within file
         TimeUnit time = TimeUnit.SECONDS;
+        //Wins variables for data
         int p1Wins = 0;
         int p2Wins = 0;
         int p3Wins = 0;
@@ -57,11 +66,14 @@ public class Game {
         Player p3 = new Player(3);
         Player p4 = new Player(4);
         System.out.println("All players will start with the 3 default pets, additional pets will be available for purchase from the shop as the game progresses.");
+        //Pet deck displays
         p1.displayPets();
         p2.displayPets();
         p3.displayPets();
         p4.displayPets();
+        //Game runs
         rounds4P(input, p1, p2, p3, p4);
+        //Pet decks are equalized to ensure battling is even between players
         if(p1.petDeck.size() > p2.petDeck.size()) {
             System.out.println("Player 2, please add a pet to even the pet quantities.");
             p2.upgradePets(input);
@@ -78,6 +90,7 @@ public class Game {
             System.out.println("Player 3, please add a pet to even the pet quantities.");
             p3.upgradePets(input);
         }
+        //Special abilities are cast, applying their attribute alterations to pets
         System.out.println("All pets now casting special abilities...");
         for(int i = 0; i < p1.petDeck.size()-1; i++) {
             p1.petDeck.get(i).useSpecial(p1.petDeck.get(i+1));
@@ -103,8 +116,10 @@ public class Game {
                 p4.petDeck.get(i).useSpecial(p4.petDeck.get(0));
             }
         }
+        //Login date and time creation
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
         Date date = new Date();
+        //Data logging to file (login/final pet decks)
         try{
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(formatter.format(date));
@@ -124,18 +139,22 @@ public class Game {
         catch (IOException e) {
             System.out.println("Could not write to file");
         }
+        //Displaying final decks for users
         System.out.println("Final pet decks before battle: ");
         p1.displayPets();
         p2.displayPets();
         p3.displayPets();
         p4.displayPets();
+        //Allows 10 seconds for users to process
         try{
             time.sleep(10);
         }
         catch(InterruptedException e) {
 
         }
+        //Declaration of each match
         System.out.println("Players 1 and 2 will now face off!");
+        //Attack method called according to player deck sizes
         for(int i = 0; i < p1.petDeck.size(); i++) {
             if(p1.attack(p1Wins, p2Wins,p1.petDeck.get(i),p2.petDeck.get(i)) == 2) {
                 p2Wins++;
@@ -144,6 +163,7 @@ public class Game {
                 p1Wins++;
             }
         }
+        //If statements to determine game outcome, according to player wins
         if(p1Wins > p2Wins) {
             System.out.printf("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
             formattedGameOutcome1 = String.format("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
@@ -152,6 +172,11 @@ public class Game {
             System.out.printf("Player 2 wins %d to %d over player 1!%n",p2Wins,p1Wins);
             formattedGameOutcome1 = String.format("Player 2 wins %d to %d over player 2!%n",p2Wins,p1Wins);
         }
+        else if(p2Wins == p1Wins) {
+            System.out.printf("Both players tied with %d wins!%n",p2Wins);
+            formattedGameOutcome1 = String.format("Both players tied with %d wins!%n",p2Wins);
+        }
+        //Second battle declaration (only for 4 player game mode)
         System.out.println("Players 3 and 4 will now face off!");
         System.out.println("To clarify as a means of avoiding confusion, player 3 will be shown as '1' and 4 as '2'");
         for(int i = 0; i < p3.petDeck.size(); i++) {
@@ -166,11 +191,16 @@ public class Game {
             System.out.printf("Player 3 wins %d to %d over player 4!%n",p3Wins,p4Wins);
             formattedGameOutcome2 = String.format("Player 3 wins %d to %d over player 4!%n",p3Wins,p4Wins);
         }
-        else if(p2Wins > p1Wins) {
+        else if(p4Wins > p3Wins) {
             System.out.printf("Player 4 wins %d to %d over player 3!%n",p4Wins,p3Wins);
             formattedGameOutcome2 = String.format("Player 4 wins %d to %d over player 3!%n",p4Wins,p3Wins);
         }
+        else if(p3Wins == p4Wins) {
+            System.out.printf("Both players tied with %d wins!%n",p4Wins);
+            formattedGameOutcome1 = String.format("Both players tied with %d wins!%n",p4Wins);
+        }
         input.nextLine();
+        //Name entry for data file
         System.out.println("All players, please enter your names.");
         System.out.println("Player 1:");
         p1Name = input.nextLine();
@@ -180,8 +210,10 @@ public class Game {
         p3Name = input.nextLine();
         System.out.println("Player 4:");
         p4Name = input.nextLine();
+        //Formatted string for data file, in accordance with entered player names
         String formattedPlayerNames = String.format("Player 1: %s%nPlayer 2: %s%nPlayer 3: %s%nPlayer 4: %s%n",p1Name,p2Name,p3Name,p4Name);
         System.out.println("Summary statistics for the most recent playthrough will be available via the program's text file. Thank you for playing!");
+        //Second bout of file writing, supplementing the existing data with the game type, players, and outcomes
         try{
             writer.write("\n");
             writer.write("Game Type: 4 player\n");
@@ -206,7 +238,7 @@ public class Game {
             }
         }
     }
-
+    //Equivalent syntax to 4 player method excluding the added statements for additional players
     public static void PV2(Scanner input) {
         File file = new File("statistics.txt");
         BufferedWriter writer = null;
@@ -285,6 +317,10 @@ public class Game {
             System.out.printf("Player 2 wins %d to %d over player 1!%n",p2Wins,p1Wins);
             formattedGameOutcome = String.format("Player 2 wins %d to %d over player 1!%n",p1Wins,p2Wins);
         }
+        else if(p2Wins == p1Wins) {
+            System.out.printf("Both players tied with %d wins!%n",p2Wins);
+            formattedGameOutcome = String.format("Both players tied with %d wins!%n",p2Wins);
+        }
         System.out.println("Summary statistics for the most recent playthrough will be available via the program's text file. Thank you for playing!");
         input.nextLine();
         System.out.println("All players, please enter your names.");
@@ -315,16 +351,20 @@ public class Game {
             }
         }
     }
-
+    //Interative function to progress game
     public static void rounds2P(Scanner input, Player p1, Player p2){
+        //Round value starts at 0, user response variable creation
         int round =0;
         String optionChose;
+        //Overarching for-loop to iterate through rounds
         for (int i=0;i<5;i++){
             round++;
+            //Nested for-loop to iterate through player actions
             for (int j=0;j<2;j++){
                 System.out.printf("Round %d start: Player %d choose your action ('u' to upgrade, 'b' to buy, 's' to access the shop%n",round, j+1);
                 while(true){
                     if(j==0){
+                        //Input validation for player choices
                         try{
                             optionChose= input.nextLine();
                             if(optionChose.equalsIgnoreCase("u")){
@@ -361,15 +401,16 @@ public class Game {
             }
         }
     }
-
+    //Similar syntax to two player rounds method, added code for additional player support
     public static void rounds4P(Scanner input, Player p1, Player p2, Player p3, Player p4){
         int round =0;
         String optionChose;
         for (int i=0;i<5;i++){
             round++;
             for (int j=0;j<4;j++){
-                System.out.printf("Round %d start: Player %d choose your action ('u' to upgrade, 'b' to buy, 's' to access the shop%n",round, j+1);
                 while(true){
+                    System.out.printf("Round %d start: Player %d choose your action ('u' to upgrade, 'b' to buy, 's' to access the shop%n",round, j+1);
+
                     if(j==0){
                         try{
                             optionChose= input.nextLine();
@@ -383,8 +424,16 @@ public class Game {
                                 p1.shop(input);
                                 break;
                             }
+                            else {
+                                throw new Exception();
+                            }
                         } catch (InputMismatchException e){
                             System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                            input.nextLine();
+                        }
+                        catch(Exception e) {
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                            input.nextLine(); 
                         }
                     } else  if(j==1){
                         try{
@@ -401,6 +450,11 @@ public class Game {
                             }
                         } catch (InputMismatchException e){
                             System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                            input.nextLine();
+                        }
+                        catch(Exception e) {
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                            input.nextLine(); 
                         }
                     } else  if(j==2){
                         try{
@@ -417,6 +471,11 @@ public class Game {
                             }
                         } catch (InputMismatchException e){
                             System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                            input.nextLine();
+                        }
+                        catch(Exception e) {
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                            input.nextLine(); 
                         }
                     } else  if(j==3){
                         try{
@@ -433,6 +492,11 @@ public class Game {
                             }
                         } catch (InputMismatchException e){
                             System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                            input.nextLine();
+                        }
+                        catch(Exception e) {
+                            System.out.println("invalid input, applicable responses are 'u', 'b', or 's'");
+                            input.nextLine(); 
                         }
                     }
                 }
