@@ -1,4 +1,5 @@
 import java.util.*;
+//Mitchell's segment of work
 public class Player {
     //Pet deck (player's lineup) and pet shop will behave as separate linked lists
     //Other variables are self-explanatory
