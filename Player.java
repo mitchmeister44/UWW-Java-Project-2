@@ -8,6 +8,7 @@ public class Player {
     private int goldCurrency;
     private int numFood;
     private int numPlayer;
+    private LinkedList<Pet> allPetsArr;
     Scanner input= new Scanner(System.in);
 
     Player(int numPlayer) {
@@ -22,7 +23,15 @@ public class Player {
             r3 = rand.nextInt(5);
         }
         Pet[] basePetArr = new Pet[]{new Ant(), new Beaver(), new Cricket(), new Duck(), new Horse()};
-
+        allPetsArr = new LinkedList<Pet>();
+        allPetsArr.add(new Ant());
+        allPetsArr.add(new Beaver());
+        allPetsArr.add(new Cricket());
+        allPetsArr.add(new Duck());
+        allPetsArr.add(new Horse());
+        allPetsArr.add(new Fish());
+        allPetsArr.add(new Owl());
+        allPetsArr.add(new Dog());
         this.numTurn = 1;
         this.goldCurrency = 10;
         this.numFood = 0;
@@ -81,64 +90,62 @@ public class Player {
     public int attack(int p1Wins, int p2Wins, Pet p1, Pet p2) {
         while(true) {
             Random rand = new Random();
-            p1.setAttackMultiplier(p2);
-            p2.setAttackMultiplier(p1);
-            if(p1.hasCoco) {
+            if(p1.foodData[0]) {
                 p2.attack = 0.0;
                 p1.hasCoco = false;
                 System.out.printf("%s casts the coconut food, setting its opponents attack to 0 for this turn!",p1.getClass().getSimpleName());
             }
-            else if(p1.hasCherry) {
+            else if(p1.foodData[1]) {
                 p2.luck--;
                 p1.hasCherry = false;
                 System.out.printf("%s casts the cherry food, decreasing its opponents luck by one point!%n",p1.getClass().getSimpleName());
             }
-            else if(p1.hasGarlic) {
+            else if(p1.foodData[2]) {
                 p2.attack--;
                 p1.hasGarlic = false;
                 System.out.printf("%s casts the garlic food, decreasing its opponents attack by 1!%n",p1.getClass().getSimpleName());
             }
-            else if(p1.hasApple) {
+            else if(p1.foodData[3]) {
                 p1.health+=2;
                 p1.hasApple = false;
                 System.out.printf("%s casts the apple food, increasing its health by 2!%n",p1.getClass().getSimpleName());
             }
-            else if(p1.hasMeat) {
+            else if(p1.foodData[4]) {
                 p1.attack++;
                 p1.hasMeat = false;
                 System.out.printf("%s casts the meat food, increasing its attack by 1!%n",p1.getClass().getSimpleName());
             }
-            else if(p1.hasChili) {
+            else if(p1.foodData[5]) {
                 p2.health-=2;
                 p1.hasChili = false;
                 System.out.printf("%s casts the chili food, decreasing its opponents health by 2!%n",p1.getClass().getSimpleName());
             }
-            if(p2.hasCoco) {
+            if(p2.foodData[0]) {
                 p1.attack = 0.0;
                 p2.hasCoco = false;
                 System.out.printf("%s casts the coconut food, setting its opponents attack to 0 for this turn!",p2.getClass().getSimpleName());
             }
-            else if(p2.hasCherry) {
+            else if(p2.foodData[1]) {
                 p1.luck--;
                 p2.hasCherry = false;
                 System.out.printf("%s casts the cherry food, decreasing its opponents luck by one point!%n",p2.getClass().getSimpleName());
             }
-            else if(p2.hasGarlic) {
+            else if(p2.foodData[2]) {
                 p1.attack--;
                 p2.hasGarlic = false;
                 System.out.printf("%s casts the garlic food, decreasing its opponents attack by 1!%n",p2.getClass().getSimpleName());
             }
-            else if(p2.hasApple) {
+            else if(p2.foodData[3]) {
                 p2.health+=2;
                 p2.hasMeat = false;
                 System.out.printf("%s casts the apple food, increasing its health by 2!%n",p2.getClass().getSimpleName());
             }
-            else if(p2.hasMeat) {
+            else if(p2.foodData[4]) {
                 p2.attack++;
                 p2.hasMeat = false;
                 System.out.printf("%s casts the meat food, increasing its attack by 1!%n",p2.getClass().getSimpleName());
             }
-            else if(p2.hasChili) {
+            else if(p2.foodData[5]) {
                 p2.health-=2;
                 p2.hasChili = false;
                 System.out.printf("%s casts the chili food, decreasing its opponents health by 2!%n",p2.getClass().getSimpleName());
@@ -231,22 +238,61 @@ public class Player {
     }
 
     public void buyPets(){
-        
+        /*
+        for(int i = 0; i < allPetsArr.size(); i++) {
+        if(i < 3) {
+        if(petDeck.get(i).getClass().getSimpleName() == allPetsArr.get(i).getClass().getSimpleName()){
+        allPetsArr.remove(i);
+        }
+        }
+        if(i >= 3) {
+        for(int j = 0; j < petDeck.size(); j++) {
+        if(petDeck.get(j).getClass().getSimpleName() == allPetsArr.get(i).getClass().getSimpleName()){
+        allPetsArr.remove(i);
+        }
+        }
+        }
+        }*/
+        System.out.println("Here are all pets available for purchase:");
+        for(int i = 0; i < allPetsArr.size(); i++) {
+            System.out.println(allPetsArr.get(i).toString());
+        }
+        System.out.println("Which one would you like to purchase? (enter '0' for the first and so on)");
+        while(true){
+            try{
+                int petChoice = input.nextInt();
+                if(petChoice >= 0 && petChoice <= allPetsArr.size()-1){
+                    petDeck.add(allPetsArr.get(petChoice));
+                    break;
+                }
+                else{
+                    throw new Exception();
+                }
+            }
+            catch(InputMismatchException e) {
+                System.out.println("Invalid input entered, please ensure your entered value is numerical and within the specified range.");
+                input.nextLine();
+            }
+            catch(Exception e) {
+                System.out.println("Invalid input, value outside specified range.");
+                input.nextLine();
+            }
+        }
     }
 
     public void shop(Scanner input){
         Random rand = new Random();
         int returnValue;
-        String[] foodItems= new String[5];
+        String[] foodItems= new String[6];
         foodItems[0]= "Coconut: a temporary shield that fully blocks 1 attack";
         foodItems[1]= "Cherry: a perk that grants increased luck";
-        foodItems[2]= "Garlic: a shield that blocks 1 damage each attack";
+        foodItems[2]= "Garlic: a shield that blocks 1 from damage each attack";
         foodItems[3]= "Apple: a buff that grants your pet plus 2 health for each fight";
         foodItems[4]= "Meat: a buff that grants your pet plus 2 attack for each fight";
-        foodItems[5]= "Chili: a buff that on attack also deals 1 damage to the next pet";
-        int item1 = rand.nextInt(5);
-        int item2= rand.nextInt(5);
-        System.out.printf("Please chose the item you would like:%n %s %n%s",foodItems[item1], foodItems[item2]);
+        foodItems[5]= "Chili: a debuff that decreases enemy health by 2 points";
+        int item1 = rand.nextInt(6);
+        int item2= rand.nextInt(6);
+        System.out.printf("Please choose the item you would like ('1' or '2'):%n%s%n%s",foodItems[item1], foodItems[item2]);
 
         while(true){
             try {
@@ -259,11 +305,31 @@ public class Player {
                     break;
                 }
             } catch (InputMismatchException e){
-                System.out.println("you must input either a 1 or a 2");
+                System.out.println("You must input either a '1' or a '2'");
             }
         }
-        System.out.println("Which pet would you like to apply the food to?");
+        System.out.println("Which pet would you like to apply the food to? ('0' for the first pet and added values for suceeding pets)");
         displayPets();
+        int userChoice = input.nextInt();
+        while(true){
+            try {
+                userChoice=input.nextInt();
+                if (userChoice>=0 && userChoice<=petDeck.size()-1){
+                    (petDeck.get(userChoice)).foodData[returnValue] = true;
+                    System.out.printf("Added %s, to the %s pet.%n",foodItems[returnValue],petDeck.get(userChoice).getClass().getSimpleName());
+                    break;
+                }
+                else {
+                    throw new Exception();
+                }
+            } catch (InputMismatchException e){
+                System.out.println("You must input a number that corrisponds to one of your pets");
+            }
+            catch(Exception e) {
+                System.out.println("Please input an integer from 0 (corresponding to your first pet) to a number that corresponds to your final pet in your deck (4 for 5th pet, 3 for 4th, etc.)");
+            }
+
+        }
         //temp pet goes here= petDeck.get(userChoice);
         //set new pet which is identical just with food boolean to true
 
