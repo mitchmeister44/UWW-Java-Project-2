@@ -2,13 +2,12 @@ public abstract class Pet implements Comparable<Pet> {
     public double health;
     public double attack;
     public double shield;
-    //Land, air, water, garden
-    //Land trumps water, air trumps land, garden trumps air, water trumps garden
     public String habitat;
     public double attackMultiplier;
     public int level;
     public int luck;
 
+    //Boolean array, used to assign foods to pets (pet cannot possess more than one of the same food type)
     boolean[] foodData= new boolean[] {false, false, false, false, false,false};
     //Sets the enemy pets attack to 0 for one turn
     public boolean hasCoco= foodData[0];
@@ -45,12 +44,12 @@ public abstract class Pet implements Comparable<Pet> {
 
     public void setAttackMultiplier(Pet p2) {
         if((this.habitat == "water" && p2.habitat == "land") || (this.habitat == "land" && p2.habitat == "air") || (this.habitat == "air" && p2.habitat == "garden") || (this.habitat == "garden" && p2.habitat == "water")) {
-            attackMultiplier/=2;
-            p2.attackMultiplier*=2;
+            attackMultiplier = 0.5;
+            p2.attackMultiplier = 2.0;
         }
         else if ((this.habitat == "land" && p2.habitat == "water") || (this.habitat == "air" && p2.habitat == "land") || (this.habitat == "garden" && p2.habitat == "air") || (this.habitat == "water" && p2.habitat == "garden")) {
-            attackMultiplier*=2;
-            p2.attackMultiplier/=2;
+            attackMultiplier = 2.0;
+            p2.attackMultiplier = 0.5;
         }
         else if (this.habitat == p2.habitat) {
             attackMultiplier = attackMultiplier;
@@ -66,7 +65,7 @@ public abstract class Pet implements Comparable<Pet> {
     public abstract void useSpecial(Pet p2);
 
     public abstract void reset();
-    
+    //Comparator creation (used to sort pets by attack when displaying pet decks
     @Override
     public int compareTo(Pet p) {
         if(attack > p.attack) {
@@ -79,7 +78,7 @@ public abstract class Pet implements Comparable<Pet> {
             return 1;
         }
     }
-    
+
     @Override
     public String toString() {
         return String.format("%s:%n %-10s %-10s%n %-10s %-10s%n %-10s %-10s%n %-10s %-10s%n %-10s %-10s%n",getName(), "Tier:", level, "Attack:", attack, "Luck:", luck, "Health:", health, "Habitat:", habitat);
