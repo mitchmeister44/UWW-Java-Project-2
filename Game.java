@@ -56,12 +56,53 @@ public class Game {
         Player p2 = new Player(2);
         Player p3 = new Player(3);
         Player p4 = new Player(4);
-        System.out.println("All players will start with the 5 default pets, 2 additional pets will be available for purchase from the shop as the game progresses.");
+        System.out.println("All players will start with the 3 default pets, additional pets will be available for purchase from the shop as the game progresses.");
         p1.displayPets();
         p2.displayPets();
         p3.displayPets();
         p4.displayPets();
         rounds4P(input, p1, p2, p3, p4);
+        if(p1.petDeck.size() > p2.petDeck.size()) {
+            System.out.println("Player 2, please add a pet to even the pet quantities.");
+            p2.upgradePets(input);
+        }
+        else if(p1.petDeck.size() < p2.petDeck.size()) {
+            System.out.println("Player 1, please add a pet to even the pet quantities.");
+            p1.upgradePets(input);
+        }
+        else if(p3.petDeck.size() > p4.petDeck.size()) {
+            System.out.println("Player 4, please add a pet to even the pet quantities.");
+            p4.upgradePets(input);
+        }
+        else if(p3.petDeck.size() < p4.petDeck.size()) {
+            System.out.println("Player 3, please add a pet to even the pet quantities.");
+            p3.upgradePets(input);
+        }
+        System.out.println("All pets now casting special abilities...");
+        for(int i = 0; i < p1.petDeck.size()-1; i++) {
+            p1.petDeck.get(i).useSpecial(p1.petDeck.get(i+1));
+            if(i == 2) {
+                p1.petDeck.get(i).useSpecial(p1.petDeck.get(0));
+            }
+        }
+        for(int i = 0; i < p2.petDeck.size()-1; i++) {
+            p2.petDeck.get(i).useSpecial(p2.petDeck.get(i+1));
+            if(i == 2) {
+                p2.petDeck.get(i).useSpecial(p2.petDeck.get(0));
+            }
+        }
+        for(int i = 0; i < p3.petDeck.size()-1; i++) {
+            p3.petDeck.get(i).useSpecial(p3.petDeck.get(i+1));
+            if(i == 2) {
+                p3.petDeck.get(i).useSpecial(p3.petDeck.get(0));
+            }
+        }
+        for(int i = 0; i < p4.petDeck.size()-1; i++) {
+            p4.petDeck.get(i).useSpecial(p4.petDeck.get(i+1));
+            if(i == 2) {
+                p4.petDeck.get(i).useSpecial(p4.petDeck.get(0));
+            }
+        }
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
         Date date = new Date();
         try{
@@ -103,6 +144,14 @@ public class Game {
                 p1Wins++;
             }
         }
+        if(p1Wins > p2Wins) {
+            System.out.printf("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
+            formattedGameOutcome1 = String.format("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
+        }
+        else if(p2Wins > p1Wins) {
+            System.out.printf("Player 2 wins %d to %d over player 1!%n",p2Wins,p1Wins);
+            formattedGameOutcome1 = String.format("Player 2 wins %d to %d over player 2!%n",p2Wins,p1Wins);
+        }
         System.out.println("Players 3 and 4 will now face off!");
         System.out.println("To clarify as a means of avoiding confusion, player 3 will be shown as '1' and 4 as '2'");
         for(int i = 0; i < p3.petDeck.size(); i++) {
@@ -113,14 +162,6 @@ public class Game {
                 p3Wins++;
             }
         }
-        if(p1Wins > p2Wins) {
-            System.out.printf("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
-            formattedGameOutcome1 = String.format("Player 1 wins %d to %d over player 2!%n",p1Wins,p2Wins);
-        }
-        else if(p2Wins > p1Wins) {
-            System.out.printf("Player 2 wins %d to %d over player 1!%n",p2Wins,p1Wins);
-            formattedGameOutcome1 = String.format("Player 2 wins %d to %d over player 2!%n",p2Wins,p1Wins);
-        }
         if(p3Wins > p4Wins) {
             System.out.printf("Player 3 wins %d to %d over player 4!%n",p3Wins,p4Wins);
             formattedGameOutcome2 = String.format("Player 3 wins %d to %d over player 4!%n",p3Wins,p4Wins);
@@ -129,6 +170,7 @@ public class Game {
             System.out.printf("Player 4 wins %d to %d over player 3!%n",p4Wins,p3Wins);
             formattedGameOutcome2 = String.format("Player 4 wins %d to %d over player 3!%n",p4Wins,p3Wins);
         }
+        input.nextLine();
         System.out.println("All players, please enter your names.");
         System.out.println("Player 1:");
         p1Name = input.nextLine();
@@ -175,10 +217,31 @@ public class Game {
         Player p2 = new Player(2);
         String p1Name,p2Name;;
         String formattedGameOutcome = " ";
-        System.out.println("All players will start with the 5 default pets, 2 additional pets will be available for purchase from the shop as the game progresses.");
+        System.out.println("All players will start with the 3 default pets, additional pets will be available for purchase from the shop as the game progresses.");
         p1.displayPets();
         p2.displayPets();
         rounds2P(input, p1, p2);
+        if(p1.petDeck.size() > p2.petDeck.size()) {
+            System.out.println("Player 2, please add a pet to even the pet quantities.");
+            p2.upgradePets(input);
+        }
+        else if(p1.petDeck.size() < p2.petDeck.size()) {
+            System.out.println("Player 1, please add a pet to even the pet quantities.");
+            p1.upgradePets(input);
+        }
+        System.out.println("All pets now casting their special abilities...");
+        for(int i = 0; i < p1.petDeck.size()-1; i++) {
+            p1.petDeck.get(i).useSpecial(p1.petDeck.get(i+1));
+            if(i == 2) {
+                p1.petDeck.get(i).useSpecial(p1.petDeck.get(0));
+            }
+        }
+        for(int i = 0; i < p2.petDeck.size()-1; i++) {
+            p2.petDeck.get(i).useSpecial(p2.petDeck.get(i+1));
+            if(i == 2) {
+                p2.petDeck.get(i).useSpecial(p2.petDeck.get(0));
+            }
+        }
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
         Date date = new Date();
         try{
@@ -223,6 +286,7 @@ public class Game {
             formattedGameOutcome = String.format("Player 2 wins %d to %d over player 1!%n",p1Wins,p2Wins);
         }
         System.out.println("Summary statistics for the most recent playthrough will be available via the program's text file. Thank you for playing!");
+        input.nextLine();
         System.out.println("All players, please enter your names.");
         System.out.println("Player 1:");
         p1Name = input.nextLine();
