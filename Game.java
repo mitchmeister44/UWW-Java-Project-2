@@ -46,7 +46,7 @@ public class Game {
             }
         }
     }
-
+    //Mitchell's segment of work
     public static void PV4(Scanner input) {
         //File creation for game statistics logging later on
         File file = new File("statistics.txt");
@@ -214,6 +214,7 @@ public class Game {
         String formattedPlayerNames = String.format("Player 1: %s%nPlayer 2: %s%nPlayer 3: %s%nPlayer 4: %s%n",p1Name,p2Name,p3Name,p4Name);
         System.out.println("Summary statistics for the most recent playthrough will be available via the program's text file. Thank you for playing!");
         //Second bout of file writing, supplementing the existing data with the game type, players, and outcomes
+        //Hisham's segment of work
         try{
             writer.write("\n");
             writer.write("Game Type: 4 player\n");
@@ -239,6 +240,7 @@ public class Game {
         }
     }
     //Equivalent syntax to 4 player method excluding the added statements for additional players
+    //Mitchell's segment of work
     public static void PV2(Scanner input) {
         File file = new File("statistics.txt");
         BufferedWriter writer = null;
@@ -276,6 +278,7 @@ public class Game {
         }
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy HH:mm:ss");
         Date date = new Date();
+        //Hisham's segment of work
         try{
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(formatter.format(date));
@@ -352,6 +355,7 @@ public class Game {
         }
     }
     //Interative function to progress game
+    //Cole's segment of work
     public static void rounds2P(Scanner input, Player p1, Player p2){
         //Round value starts at 0, user response variable creation
         int round =0;
@@ -402,6 +406,7 @@ public class Game {
         }
     }
     //Similar syntax to two player rounds method, added code for additional player support
+    //Cole's segment of work
     public static void rounds4P(Scanner input, Player p1, Player p2, Player p3, Player p4){
         int round =0;
         String optionChose;
